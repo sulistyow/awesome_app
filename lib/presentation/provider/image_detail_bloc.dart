@@ -50,7 +50,6 @@ class ImageDetailBloc extends Bloc<ImageDetailEvent, ImageDetailState> {
       result.fold((failure) {
         emit(isError(message: failure.message));
       }, (data) {
-        print("Detail Data : ${data.toString()}");
         emit(isLoaded(photoDetail: data));
       });
     });

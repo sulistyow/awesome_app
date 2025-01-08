@@ -21,7 +21,6 @@ class SecureClient extends http.BaseClient {
     final httpClient = HttpClient(context: securityContext);
     httpClient.badCertificateCallback =
         (X509Certificate cert, String host, int port) {
-      print('Invalid certificate from $host:$port.');
       return false;
     };
 

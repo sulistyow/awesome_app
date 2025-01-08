@@ -23,8 +23,6 @@ class ImageRemoteDataSourceImpl implements ImageRemoteDataSource {
     final response = await client.get(
         Uri.parse('$BASE_URL/curated?page=$page&per_page=10'),
         headers: {'Authorization': API_KEY});
-    print('$BASE_URL/curated?page=$page&per_page=10');
-
     if (response.statusCode == 200) {
       var anu = ImageResponse.fromJson(response.body).photos ?? [];
       return anu;
@@ -37,7 +35,6 @@ class ImageRemoteDataSourceImpl implements ImageRemoteDataSource {
   Future<DetailResponse> getDetailImage(String id) async {
     final response = await client.get(Uri.parse('$BASE_URL/photos/$id'),
         headers: {'Authorization': API_KEY});
-    print('$BASE_URL/photos/$id');
     if (response.statusCode == 200) {
       return DetailResponse.fromJson(response.body);
     } else {

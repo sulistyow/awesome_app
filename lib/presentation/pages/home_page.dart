@@ -37,13 +37,11 @@ class _HomePageState extends State<HomePage> {
             scrollController.position.maxScrollExtent - 100 &&
         !bloc.isFetching &&
         !bloc.errorFetch) {
-      print(bloc.errorFetch);
       if (bloc.errorFetch) {
         page = 1;
       } else {
         page++;
       }
-      print(page);
       context.read<ImageListBloc>().add(FetchImageList(page));
     }
   }
