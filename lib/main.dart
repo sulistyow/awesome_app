@@ -1,14 +1,16 @@
+import 'package:awesome_app/domain/usecases/get_detail_image.dart';
 import 'package:awesome_app/domain/usecases/get_images.dart';
 import 'package:awesome_app/injection.dart' as di;
 import 'package:awesome_app/presentation/pages/home_page.dart';
+import 'package:awesome_app/presentation/provider/image_detail_bloc.dart';
 import 'package:awesome_app/presentation/provider/image_list_bloc.dart';
 import 'package:awesome_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'injection.dart';
 import 'presentation/pages/detail_page.dart';
 import 'utils/routes.dart';
-import 'injection.dart';
 
 void main() {
   di.init();
@@ -24,7 +26,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-            create: (_) => ImageListBloc(getImages: locator<GetImages>()))
+            create: (_) => ImageListBloc(getImages: locator<GetImages>())),
+        BlocProvider(
+            create: (_) =>
+                ImageDetailBloc(getDetailImage: locator<GetDetailImage>())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -40,7 +45,7 @@ class MyApp extends StatelessWidget {
               final id = settings.arguments as int;
               return MaterialPageRoute(
                   builder: (_) => DetailPage(
-                        id: id,
+                        photoId: id,
                       ),
                   settings: settings);
             default:

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:awesome_app/data/models/detail_response.dart';
 import 'package:awesome_app/data/models/image_response.dart';
 import 'package:awesome_app/utils/exception.dart';
@@ -38,8 +36,8 @@ class ImageRemoteDataSourceImpl implements ImageRemoteDataSource {
   @override
   Future<DetailResponse> getDetailImage(String id) async {
     final response = await client.get(Uri.parse('$BASE_URL/photos/$id'),
-        headers: {HttpHeaders.authorizationHeader: "Authorization ${API_KEY}"});
-
+        headers: {'Authorization': API_KEY});
+    print('$BASE_URL/photos/$id');
     if (response.statusCode == 200) {
       return DetailResponse.fromJson(response.body);
     } else {

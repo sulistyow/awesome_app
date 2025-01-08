@@ -14,12 +14,14 @@ class ImageRepositoryImpl implements ImageRepository {
   ImageRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, PhotoDetail>> getDetailImage(String id) {
+  Future<Either<Failure, PhotoDetail>> getDetailImage(String id) async {
     try {
-      final result = remoteDataSource.getDetailImage(id);
-      return result.then((value) => Right(value.toEntity()));
-    } catch (e) {
-      return Future.value(Left(ServerFailure(e.toString())));
+      final result = await remoteDataSource.getDetailImage(id);
+      return Right(result.toEntity());
+    } on ServerException {
+      return Left(ServerFailure('Cannot connect to server'));
+    } on SocketException {
+      return Left(ConnectionFailure('Failed to connect to network'));
     }
   }
 
