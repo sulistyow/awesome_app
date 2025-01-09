@@ -2,13 +2,13 @@ import 'package:awesome_app/domain/usecases/get_detail_image.dart';
 import 'package:awesome_app/domain/usecases/get_images.dart';
 import 'package:awesome_app/injection.dart' as di;
 import 'package:awesome_app/presentation/pages/home_page.dart';
-import 'package:awesome_app/presentation/provider/image_detail_bloc.dart';
-import 'package:awesome_app/presentation/provider/image_list_bloc.dart';
 import 'package:awesome_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'injection.dart';
+import 'presentation/bloc/image_detail_bloc.dart';
+import 'presentation/bloc/image_list_bloc.dart';
 import 'presentation/pages/detail_page.dart';
 import 'utils/routes.dart';
 

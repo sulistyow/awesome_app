@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:awesome_app/data/models/detail_response.dart';
 import 'package:awesome_app/data/models/image_response.dart';
+import 'package:awesome_app/data/models/photo.dart';
 import 'package:awesome_app/utils/exception.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,7 +27,7 @@ class ImageRemoteDataSourceImpl implements ImageRemoteDataSource {
         Uri.parse('$BASE_URL/curated?page=$page&per_page=10'),
         headers: {'Authorization': API_KEY});
     if (response.statusCode == 200) {
-      var anu = ImageResponse.fromJson(response.body).photos ?? [];
+      var anu = ImageResponse.fromJson(jsonDecode(response.body)).photos ?? [];
       return anu;
     } else {
       throw ServerException();
@@ -36,7 +39,7 @@ class ImageRemoteDataSourceImpl implements ImageRemoteDataSource {
     final response = await client.get(Uri.parse('$BASE_URL/photos/$id'),
         headers: {'Authorization': API_KEY});
     if (response.statusCode == 200) {
-      return DetailResponse.fromJson(response.body);
+      return DetailResponse.fromJson(jsonDecode(response.body));
     } else {
       throw ServerException();
     }

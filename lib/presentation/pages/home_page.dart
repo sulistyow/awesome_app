@@ -1,4 +1,6 @@
-import 'package:awesome_app/presentation/provider/image_list_bloc.dart';
+import 'package:awesome_app/presentation/bloc/image_list_bloc.dart';
+import 'package:awesome_app/presentation/bloc/image_list_event.dart';
+import 'package:awesome_app/presentation/bloc/image_list_state.dart';
 import 'package:awesome_app/presentation/widgets/grid_image_card.dart';
 import 'package:awesome_app/presentation/widgets/list_image_card.dart';
 import 'package:flutter/material.dart';
@@ -51,10 +53,15 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: BlocListener<ImageListBloc, ImageListState>(
         listener: (context, state) {
-          if (state is isError) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.message)));
-          }
+          state.when(
+            isLoading: () {},
+            isLoadedImage: (imageList) {},
+            isError: (message) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(message)));
+            },
+            isLoadingMore: (imageList) {},
+          );
         },
         child: CustomScrollView(
           controller: scrollController,
@@ -79,85 +86,123 @@ class _HomePageState extends State<HomePage> {
             ),
             BlocBuilder<ImageListBloc, ImageListState>(
               builder: (context, state) {
-                if (state is isLoading) {
-                  return const SliverFillRemaining(
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else if (state is isLoadedImage || state is isLoadingMore) {
-                  final imageList = (state is isLoadedImage)
-                      ? state.imageList
-                      : (state as isLoadingMore).imageList;
-
-                  return SliverPadding(
-                    padding: const EdgeInsets.all(8.0),
-                    sliver: isGridView
-                        ? SliverGrid(
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                            ),
-                            delegate: SliverChildBuilderDelegate(
+                return state.when(
+                  isLoading: () {
+                    return const SliverFillRemaining(
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  },
+                  isLoadedImage: (imageList) {
+                    return SliverPadding(
+                      padding: const EdgeInsets.all(8.0),
+                      sliver: isGridView
+                          ? SliverGrid(
+                        gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                        delegate: SliverChildBuilderDelegate(
                               (context, index) {
-                                if (index == imageList.length) {
-                                  // Show loading spinner
-                                  return const Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Center(
-                                        child: CircularProgressIndicator()),
-                                  );
-                                }
-                                return GridImageCard(photo: imageList[index]);
-                              },
-                              childCount:
-                                  imageList.length + 1, // Include loader
-                            ),
-                          )
-                        : SliverList(
-                            delegate: SliverChildBuilderDelegate(
+                            if (index == imageList.length) {
+                              // Show loading spinner
+                              return const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Center(
+                                    child: CircularProgressIndicator()),
+                              );
+                            }
+                            return GridImageCard(photo: imageList[index]);
+                          },
+                          childCount: imageList.length + 1, // Include loader
+                        ),
+                      )
+                          : SliverList(
+                        delegate: SliverChildBuilderDelegate(
                               (context, index) {
-                                if (index == imageList.length) {
-                                  return const Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: Center(
-                                        child: CircularProgressIndicator()),
-                                  );
-                                }
-                                return ListImageCard(photo: imageList[index]);
-                              },
-                              childCount:
-                                  imageList.length + 1, // Include loader
-                            ),
-                          ),
-                  );
-                } else {
-                  return SliverFillRemaining(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Opss! Something wrong!",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 8),
-                          OutlinedButton(
-                            onPressed: () {
-                              context
-                                  .read<ImageListBloc>()
-                                  .add(FetchImageList(1));
-                            },
-                            child: Text("Refresh"),
-                          ),
-                        ],
+                            if (index == imageList.length) {
+                              return const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Center(
+                                    child: CircularProgressIndicator()),
+                              );
+                            }
+                            return ListImageCard(photo: imageList[index]);
+                          },
+                          childCount: imageList.length + 1, // Include loader
+                        ),
                       ),
-                    ),
-                  );
-                }
+                    );
+                  },
+                  isError: (message) {
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Opss! Something wrong!",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 8),
+                            OutlinedButton(
+                              onPressed: () {
+                                context.read<ImageListBloc>().add(FetchImageList(1));
+                              },
+                              child: Text("Refresh"),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  isLoadingMore: (imageList) {
+                    return SliverPadding(
+                      padding: const EdgeInsets.all(8.0),
+                      sliver: isGridView
+                          ? SliverGrid(
+                        gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                            if (index == imageList.length) {
+                              return const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Center(
+                                    child: CircularProgressIndicator()),
+                              );
+                            }
+                            return GridImageCard(photo: imageList[index]);
+                          },
+                          childCount: imageList.length + 1, // Include loader
+                        ),
+                      )
+                          : SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                            if (index == imageList.length) {
+                              return const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Center(
+                                    child: CircularProgressIndicator()),
+                              );
+                            }
+                            return ListImageCard(photo: imageList[index]);
+                          },
+                          childCount: imageList.length + 1, // Include loader
+                        ),
+                      ),
+                    );
+                  },
+                );
               },
-            )
+            ),
           ],
         ),
       ),

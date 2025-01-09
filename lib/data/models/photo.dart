@@ -1,13 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 import 'src.dart';
 
-part 'detail_response.freezed.dart';
-part 'detail_response.g.dart';
+part 'photo.freezed.dart';
+part 'photo.g.dart';
 
 @freezed
-class DetailResponse with _$DetailResponse {
-  const factory DetailResponse({
+class Photo with _$Photo {
+  const factory Photo({
     int? id,
     int? width,
     int? height,
@@ -19,8 +18,7 @@ class DetailResponse with _$DetailResponse {
     Src? src,
     bool? liked,
     String? alt,
-  }) = _DetailResponse;
+  }) = _Photo;
 
-  factory DetailResponse.fromJson(Map<String, dynamic> json) =>
-      _$DetailResponseFromJson(json);
+  factory Photo.fromJson(Map<String, dynamic> json) => _$PhotoFromJson(json);
 }

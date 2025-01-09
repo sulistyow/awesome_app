@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:awesome_app/data/datasources/image_remote_data_source.dart';
+import 'package:awesome_app/data/utils/mapper.dart';
 import 'package:awesome_app/domain/entities/photo.dart';
 import 'package:awesome_app/domain/entities/photo_detail.dart';
 import 'package:awesome_app/domain/repositories/image_repository.dart';
@@ -29,7 +30,7 @@ class ImageRepositoryImpl implements ImageRepository {
   Future<Either<Failure, List<PhotoEntity>>> getImages(int page) async {
     try {
       final result = await remoteDataSource.getImages(page);
-      return Right(result.map((e) => e.toEntity()).toList());
+      return Right(result.map((photo) => photo.toEntity()).toList());
     } on ServerException {
       return Left(ServerFailure('Cannot connect to server'));
     } on SocketException {

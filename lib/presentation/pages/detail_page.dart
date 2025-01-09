@@ -1,4 +1,6 @@
-import 'package:awesome_app/presentation/provider/image_detail_bloc.dart';
+import 'package:awesome_app/presentation/bloc/image_detail_bloc.dart';
+import 'package:awesome_app/presentation/bloc/image_detail_event.dart';
+import 'package:awesome_app/presentation/bloc/image_detail_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,7 +37,7 @@ class _DetailPageState extends State<DetailPage> {
               child: CircularProgressIndicator(),
             );
           } else if (state is isLoaded) {
-            var photo = state.photoDetail;
+            var photo = state.photo;
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +91,7 @@ class _DetailPageState extends State<DetailPage> {
                         style: TextStyle(fontSize: 14),
                       ),
                       Text(
-                        photo.alt!.isEmpty ? "no description" : '${photo.alt}',
+                        photo.alt!.isEmpty ? "--" : '${photo.alt}',
                         textAlign: TextAlign.justify,
                         style: TextStyle(fontSize: 14),
                       ),
