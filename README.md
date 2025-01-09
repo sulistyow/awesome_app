@@ -1,16 +1,20 @@
-# awesome_app
+# Awesome App
 
-A flutter project to show image list from api
+## Overview
 
-## Getting Started
+Awesome App is a Flutter-based mobile application that fetches and displays randomized images and descriptions from the Pexels API or any other similar open-source/free API. The app aims to provide an engaging and responsive experience for browsing images with a variety of features and functionality.
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
+- Dynamic List Style: Users can toggle between grid view and list view using an icon in the AppBar.
+- Infinite Scrolling: Automatically loads more images as the user scrolls down.
+- Detail Page: Each item is tappable and navigates to a detail page displaying:
+  * Larger version of the image
+  * Photographer’s name
+  * Photo URL
+  * Additional optional details about the image
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Technical Specifications
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+-  Framework: Flutter
+-  State Management: BLoC.
